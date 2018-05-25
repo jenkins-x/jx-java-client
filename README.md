@@ -2,9 +2,14 @@
 
 This library implements a Java client for working with [Jenkins X](https://jenkins-x.io/) for use in things like:
 
-* Jenkins plugins such as [jx-resources]
+* Jenkins plugins such as [jx-resources](https://github.com/jenkinsci/jx-resources-plugin)
 * IDE plugins such as for IDEA or eclipse 
-* other Java tools that want to intergrate closely with Jenkins X
+* other Java tools that want to integrate closely with Jenkins X
+
+<a href="http://jenkins-x.io/">
+  <img src="http://jenkins-x.io/img/profile.png" alt="Jenkins X icon" width="100" height="123"/>
+</a>
+
 
 ## Using the PipelineClient
 
