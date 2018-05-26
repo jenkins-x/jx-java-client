@@ -14,25 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jenkins.x.client.util;
+package io.jenkins.x.client.tree;
 
 /**
  */
-public class Strings {
-
-    /**
-     * Returns true if the string is not null and not empty
-     */
-    public static boolean notEmpty(String text) {
-        return text != null && !text.isEmpty();
+public class StageNode extends TreeNode<String,StageNode> {
+    public StageNode(TreeItem parent, String label) {
+        super(parent, label);
     }
-
-
-    /**
-     * Returns true if the string is null or empty
-     */
-    public static boolean empty(String text) {
-        return text == null || text.isEmpty();
-    }
-
 }

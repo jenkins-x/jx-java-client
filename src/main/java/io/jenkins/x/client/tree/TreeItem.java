@@ -14,25 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jenkins.x.client.util;
+package io.jenkins.x.client.tree;
+
+import java.util.List;
 
 /**
  */
-public class Strings {
+public interface TreeItem {
 
-    /**
-     * Returns true if the string is not null and not empty
-     */
-    public static boolean notEmpty(String text) {
-        return text != null && !text.isEmpty();
-    }
+    List<TreeItem> getChildrenItems();
 
+    TreeItem getParent();
 
-    /**
-     * Returns true if the string is null or empty
-     */
-    public static boolean empty(String text) {
-        return text == null || text.isEmpty();
-    }
-
+    String getLabel();
 }

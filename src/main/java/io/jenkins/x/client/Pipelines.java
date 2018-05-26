@@ -14,25 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jenkins.x.client.util;
+package io.jenkins.x.client;
+
+import static io.jenkins.x.client.util.Strings.notEmpty;
 
 /**
  */
-public class Strings {
-
-    /**
-     * Returns true if the string is not null and not empty
-     */
-    public static boolean notEmpty(String text) {
-        return text != null && !text.isEmpty();
+public class Pipelines {
+    public static boolean isPullRequestBranch(String branchName) {
+        return branchName != null && branchName.toUpperCase().startsWith("PR-");
     }
 
-
-    /**
-     * Returns true if the string is null or empty
-     */
-    public static boolean empty(String text) {
-        return text == null || text.isEmpty();
+    public static Integer getBuildNumber(String build) {
+        if (notEmpty(build)) {
+            try {
+                return Integer.parseInt(build);
+            } catch (NumberFormatException e) {
+                // ignore
+            }
+        }
+        return null;
     }
-
 }

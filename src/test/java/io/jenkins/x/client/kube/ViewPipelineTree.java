@@ -14,25 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jenkins.x.client.util;
+package io.jenkins.x.client.kube;
+
+import io.jenkins.x.client.tree.PipelineTreeModel;
+import io.jenkins.x.client.tree.TreeItem;
+
+import java.util.List;
 
 /**
  */
-public class Strings {
+public class ViewPipelineTree {
+    public static void main(String[] args) throws Exception {
+        PipelineTreeModel model = PipelineTreeModel.newInstance();
 
-    /**
-     * Returns true if the string is not null and not empty
-     */
-    public static boolean notEmpty(String text) {
-        return text != null && !text.isEmpty();
+        viewTree(model, "");
+
+        model.getPipelineClient().close();
     }
 
-
-    /**
-     * Returns true if the string is null or empty
-     */
-    public static boolean empty(String text) {
-        return text == null || text.isEmpty();
+    public static void viewTree(TreeItem node, String indent) {
+        System.out.println(indent + node.getLabel());
+        List<TreeItem> children = node.getChildrenItems();
+        indent += "  ";
+        for (TreeItem child : children) {
+            viewTree(child, indent);
+        }
     }
-
 }
