@@ -51,4 +51,16 @@ public class OwnerNode extends TreeNode<String,RepoNode> {
             child.upsertPipeline(branchName, build, activity);
         }
     }
+
+    @Override
+    public String getIconPath() {
+        // TODO
+        return "";
+
+    }
+
+    @Override
+    public String getTooltip() {
+        return "Owner: " + getLabel();
+    }
 }

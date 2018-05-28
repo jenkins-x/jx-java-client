@@ -20,10 +20,9 @@ import io.jenkins.x.client.kube.PipelineActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import static io.jenkins.x.client.Pipelines.isPullRequestBranch;
+import static io.jenkins.x.client.util.Icons.lightDarkIcon;
 import static io.jenkins.x.client.util.Strings.notEmpty;
 
 /**
@@ -74,5 +73,16 @@ public class RepoNode extends TreeNode<String,BranchNode> {
                 child.upsertPipeline(branchName, build, activity);
             }
         }
+    }
+
+    @Override
+    public String getIconPath() {
+        return lightDarkIcon("octoface.png");
+
+    }
+
+    @Override
+    public String getTooltip() {
+        return "Git Repository " + getParent().getLabel() + "/" + getLabel();
     }
 }

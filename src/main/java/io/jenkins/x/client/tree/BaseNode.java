@@ -39,4 +39,14 @@ public abstract class BaseNode<K,T extends BaseNode> implements TreeItem {
          answer.addAll(this.getChildren());
          return answer;
      }
+
+     @Override
+     public String getIconPath() {
+        return "";
+     }
+
+     @Override
+     public String getTooltip() {
+        return "";
+     }
 }

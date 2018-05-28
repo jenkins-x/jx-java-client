@@ -22,17 +22,37 @@ import io.jenkins.x.client.kube.PipelineActivityStep;
 
 import java.util.List;
 
+import static io.jenkins.x.client.util.Times.elapsedTime;
+
 /**
  */
-public class BuildNode extends TreeNode<String,StageNode> {
+public class BuildNode extends TreeNode<String, StageNode> {
     private PipelineActivity pipeline;
 
     public BuildNode(BranchNode branchNode, String build) {
         super(branchNode, build);
     }
 
-    public void setPipeline(PipelineActivity pipeline) {
-        this.pipeline = pipeline;
+    @Override
+    public String getIconPath() {
+        switch (getStatus()) {
+            case "Succeeded":
+                return "images/atomist_build_passed.png";
+            case "Failed":
+            case "Error":
+                return "images/atomist_build_failed.png";
+            case "Running":
+                return "images/spinner.gif";
+            case "Aborted":
+                return "images/circle-64.png";
+        }
+        return "";
+    }
+
+    @Override
+    public String getTooltip() {
+        PipelineActivitySpec step = getSpec();
+        return "#" + getBuild() + ": " + getStatus() + elapsedTime(" Duration: ", step.getStartedTimestamp(), step.getCompletedTimestamp());
     }
 
     public PipelineActivity getPipeline() {
@@ -40,6 +60,10 @@ public class BuildNode extends TreeNode<String,StageNode> {
             pipeline = new PipelineActivity();
         }
         return pipeline;
+    }
+
+    public void setPipeline(PipelineActivity pipeline) {
+        this.pipeline = pipeline;
     }
 
     public PipelineActivitySpec getSpec() {

@@ -18,6 +18,7 @@ package io.jenkins.x.client.tree;
 
 import io.jenkins.x.client.kube.PipelineActivity;
 
+import static io.jenkins.x.client.util.Icons.lightDarkIcon;
 import static io.jenkins.x.client.util.Strings.notEmpty;
 
 /**
@@ -49,5 +50,16 @@ public class PullRequestsNode extends TreeNode<String, BranchNode> {
             }
             child.upsertPipeline(branchName, build, activity);
         }
+    }
+
+    @Override
+    public String getIconPath() {
+        return lightDarkIcon("git-pull-request.png");
+    }
+
+    @Override
+    public String getTooltip() {
+        return "Pull Requests on " + getParent().getTooltip();
+
     }
 }

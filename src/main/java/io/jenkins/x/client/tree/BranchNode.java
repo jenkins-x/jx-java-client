@@ -22,10 +22,12 @@ import io.jenkins.x.client.kube.PipelineActivity;
 import java.util.Collections;
 import java.util.List;
 
+import static io.jenkins.x.client.Pipelines.isPullRequestBranch;
+import static io.jenkins.x.client.util.Icons.lightDarkIcon;
+
 /**
  */
-public class BranchNode extends TreeNode<Integer,BuildNode> {
-
+public class BranchNode extends TreeNode<Integer, BuildNode> {
     public BranchNode(TreeItem parent, String branchName) {
         super(parent, branchName);
     }
@@ -54,5 +56,23 @@ public class BranchNode extends TreeNode<Integer,BuildNode> {
             }
             child.setPipeline(activity);
         }
+    }
+
+    public String getBranch() {
+        return getLabel();
+    }
+
+    @Override
+    public String getIconPath() {
+        if (isPullRequestBranch(getBranch())) {
+            return lightDarkIcon("git-pull-request.png");
+        }
+        return lightDarkIcon("git-branch.png");
+
+    }
+
+    @Override
+    public String getTooltip() {
+        return getParent().getTooltip() + " branch: " + getBranch();
     }
 }

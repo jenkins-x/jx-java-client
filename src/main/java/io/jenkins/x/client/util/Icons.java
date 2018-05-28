@@ -14,21 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jenkins.x.client.tree;
-
-import java.util.List;
+package io.jenkins.x.client.util;
 
 /**
  */
-public interface TreeItem {
-
-    List<TreeItem> getChildrenItems();
-
-    TreeItem getParent();
-
-    String getLabel();
-
-    String getIconPath();
-
-    String getTooltip();
+public class Icons {
+    public static String lightDarkIcon(String fileName) {
+        // TODO
+        return "images/" + fileName;
+    }
 }

@@ -14,21 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jenkins.x.client.tree;
-
-import java.util.List;
+package io.jenkins.x.client.util;
 
 /**
  */
-public interface TreeItem {
+public class Times {
+    public static String elapsedTime(String message, String startedTimestamp, String completedTimestamp) {
+        // TODO
+        return "";
+    }
 
-    List<TreeItem> getChildrenItems();
-
-    TreeItem getParent();
-
-    String getLabel();
-
-    String getIconPath();
-
-    String getTooltip();
 }
