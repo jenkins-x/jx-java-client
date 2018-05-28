@@ -21,6 +21,6 @@ package io.jenkins.x.client.util;
 public class Icons {
     public static String lightDarkIcon(String fileName) {
         // TODO
-        return "images/" + fileName;
+        return fileName;
     }
 }

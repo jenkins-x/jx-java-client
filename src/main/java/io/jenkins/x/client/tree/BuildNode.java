@@ -37,14 +37,14 @@ public class BuildNode extends TreeNode<String, StageNode> {
     public String getIconPath() {
         switch (getStatus()) {
             case "Succeeded":
-                return "images/atomist_build_passed.png";
+                return "atomist_build_passed.png";
             case "Failed":
             case "Error":
-                return "images/atomist_build_failed.png";
+                return "atomist_build_failed.png";
             case "Running":
-                return "images/spinner.gif";
+                return "spinner.gif";
             case "Aborted":
-                return "images/circle-64.png";
+                return "circle-64.png";
         }
         return "";
     }
