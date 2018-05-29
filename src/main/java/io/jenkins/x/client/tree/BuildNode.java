@@ -20,6 +20,7 @@ import io.jenkins.x.client.kube.PipelineActivity;
 import io.jenkins.x.client.kube.PipelineActivitySpec;
 import io.jenkins.x.client.kube.PipelineActivityStep;
 
+import java.util.Collections;
 import java.util.List;
 
 import static io.jenkins.x.client.util.Times.elapsedTime;
@@ -109,7 +110,11 @@ public class BuildNode extends TreeNode<String, StageNode> {
     }
 
     public String getStatus() {
-        return getSpec().getStatus();
+        String status = getSpec().getStatus();
+        if (status == null) {
+            return "";
+        }
+        return status;
     }
 
     public String getStartedTimestamp() {
@@ -121,7 +126,11 @@ public class BuildNode extends TreeNode<String, StageNode> {
     }
 
     public List<PipelineActivityStep> getSteps() {
-        return getSpec().getSteps();
+        List<PipelineActivityStep> steps = getSpec().getSteps();
+        if (steps == null) {
+            return Collections.EMPTY_LIST;
+        }
+        return steps;
     }
 
 
