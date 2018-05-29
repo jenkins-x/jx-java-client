@@ -33,4 +33,9 @@ public interface TreeItem {
     String getIconPath();
 
     String getTooltip();
+
+    /**
+     * Returns the path from the root object to the given node
+     */
+    Object[] getPath();
 }

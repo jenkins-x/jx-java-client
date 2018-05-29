@@ -18,6 +18,7 @@ package io.jenkins.x.client.tree;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -45,5 +46,16 @@ public abstract class BaseNode<K, T extends BaseNode> implements TreeItem {
     @Override
     public String getTooltip() {
         return "";
+    }
+
+    @Override
+    public Object[] getPath() {
+        LinkedList<TreeItem> list = new LinkedList<>();
+        TreeItem node = this;
+        while (node != null) {
+            list.addFirst(node);
+            node = node.getParent();
+        }
+        return list.toArray();
     }
 }
