@@ -55,6 +55,16 @@ public class PipelineTreeModel extends TreeNode<String,OwnerNode> implements Wat
     }
 
     @Override
+    public String getIconPath() {
+        return "jx-logo.png";
+    }
+
+    @Override
+    public String getTooltip() {
+        return "Jenkins X Pipelines";
+    }
+
+    @Override
     public void eventReceived(Action action, PipelineActivity activity) {
         ObjectMeta metadata = activity.getMetadata();
         PipelineActivitySpec spec = activity.getSpec();
