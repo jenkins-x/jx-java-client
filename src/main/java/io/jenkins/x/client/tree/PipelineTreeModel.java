@@ -33,11 +33,9 @@ import static io.jenkins.x.client.util.Strings.notEmpty;
 public class PipelineTreeModel extends TreeNode<String, OwnerNode> implements Watcher<PipelineActivity> {
     private static final transient Logger LOG = LoggerFactory.getLogger(PipelineTreeModel.class);
     private PipelineClient pipelineClient;
-    private TreeModelListeners listeners = new TreeModelListeners();
 
     public PipelineTreeModel(PipelineClient pipelineClient) {
         super(new TreeModelListeners(), null, "Pipelines");
-        this.listeners = listeners;
         this.pipelineClient = pipelineClient;
         this.pipelineClient.addListener(this);
     }
@@ -57,11 +55,11 @@ public class PipelineTreeModel extends TreeNode<String, OwnerNode> implements Wa
     }
 
     public void addListener(TreeModelListener listener) {
-        listeners.addListener(listener);
+        getListeners().addListener(listener);
     }
 
     public void removeListener(TreeModelListener listener) {
-        listeners.removeListener(listener);
+        getListeners().removeListener(listener);
     }
 
     @Override
