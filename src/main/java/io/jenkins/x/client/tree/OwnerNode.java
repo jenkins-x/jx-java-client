@@ -18,17 +18,14 @@ package io.jenkins.x.client.tree;
 
 import io.jenkins.x.client.kube.PipelineActivity;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 import static io.jenkins.x.client.util.Strings.notEmpty;
 
 /**
  */
-public class OwnerNode extends TreeNode<String,RepoNode> {
+public class OwnerNode extends TreeNode<String, RepoNode> {
 
     public OwnerNode(PipelineTreeModel parent, String owner) {
-        super(parent, owner);
+        super(parent.getListeners(), parent, owner);
     }
 
     public void deletePipeline(String owner, String repo, String branchName, String build, PipelineActivity activity) {

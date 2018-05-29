@@ -47,7 +47,7 @@ public class PipelineActivity extends CustomResource {
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
-    
+
     public PipelineActivitySpec getSpec() {
         return spec;
     }

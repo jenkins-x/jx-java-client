@@ -17,33 +17,39 @@
 package io.jenkins.x.client.tree;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  */
-public abstract class BaseNode<K, T extends BaseNode> implements TreeItem {
-    public List<T> getChildren() {
-        return Collections.EMPTY_LIST;
+public class TreeModelListeners implements TreeModelListener {
+    private List<TreeModelListener> listeners = new ArrayList<>();
+
+    public void addListener(TreeModelListener listener) {
+        listeners.add(listener);
     }
 
-    public boolean isEmpty() {
-        return getChildren().isEmpty();
-    }
-
-    public List<TreeItem> getChildrenItems() {
-        List<TreeItem> answer = new ArrayList<>();
-        answer.addAll(this.getChildren());
-        return answer;
+    public void removeListener(TreeModelListener listener) {
+        listeners.add(listener);
     }
 
     @Override
-    public String getIconPath() {
-        return "";
+    public void itemAdded(TreeItem treeItem) {
+        for (TreeModelListener listener : listeners) {
+            listener.itemAdded(treeItem);
+        }
     }
 
     @Override
-    public String getTooltip() {
-        return "";
+    public void itemUpdated(TreeItem treeItem) {
+        for (TreeModelListener listener : listeners) {
+            listener.itemUpdated(treeItem);
+        }
+    }
+
+    @Override
+    public void itemDeleted(TreeItem treeItem) {
+        for (TreeModelListener listener : listeners) {
+            listener.itemDeleted(treeItem);
+        }
     }
 }

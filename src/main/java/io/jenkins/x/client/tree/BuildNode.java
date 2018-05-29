@@ -30,7 +30,7 @@ public class BuildNode extends TreeNode<String, StageNode> {
     private PipelineActivity pipeline;
 
     public BuildNode(BranchNode branchNode, String build) {
-        super(branchNode, build);
+        super(branchNode.getListeners(), branchNode, build);
     }
 
     @Override
@@ -64,6 +64,7 @@ public class BuildNode extends TreeNode<String, StageNode> {
 
     public void setPipeline(PipelineActivity pipeline) {
         this.pipeline = pipeline;
+        getListeners().itemUpdated(this);
     }
 
     public PipelineActivitySpec getSpec() {

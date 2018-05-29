@@ -26,6 +26,8 @@ public interface TreeItem {
 
     TreeItem getParent();
 
+    TreeModelListeners getListeners();
+
     String getLabel();
 
     String getIconPath();

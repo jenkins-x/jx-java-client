@@ -18,8 +18,11 @@ package io.jenkins.x.client.tree;
 
 /**
  */
-public class StageNode extends TreeNode<String, StageNode> {
-    public StageNode(TreeItem parent, String label) {
-        super(parent.getListeners(), parent, label);
-    }
+public interface TreeModelListener {
+
+    void itemAdded(TreeItem treeItem);
+
+    void itemUpdated(TreeItem treeItem);
+
+    void itemDeleted(TreeItem treeItem);
 }

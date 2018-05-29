@@ -27,11 +27,11 @@ import static io.jenkins.x.client.util.Strings.notEmpty;
 
 /**
  */
-public class RepoNode extends TreeNode<String,BranchNode> {
+public class RepoNode extends TreeNode<String, BranchNode> {
     private PullRequestsNode pullRequestsNode = new PullRequestsNode(this, "Pull Requests");
 
     public RepoNode(OwnerNode ownerNode, String repo) {
-        super(ownerNode, repo);
+        super(ownerNode.getListeners(), ownerNode, repo);
     }
 
     public List<TreeItem> getChildrenItems() {

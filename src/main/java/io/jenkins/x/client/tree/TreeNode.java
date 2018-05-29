@@ -26,9 +26,11 @@ import java.util.TreeMap;
 public abstract class TreeNode<K, T extends TreeNode> extends BaseNode<K, T> {
     private final TreeItem parent;
     private final String label;
+    private TreeModelListeners listeners;
     private Map<K, T> children = new TreeMap<>();
 
-    public TreeNode(TreeItem parent, String label) {
+    public TreeNode(TreeModelListeners listeners, TreeItem parent, String label) {
+        this.listeners = listeners;
         this.parent = parent;
         this.label = label;
     }
@@ -36,6 +38,11 @@ public abstract class TreeNode<K, T extends TreeNode> extends BaseNode<K, T> {
     @Override
     public TreeItem getParent() {
         return parent;
+    }
+
+    @Override
+    public TreeModelListeners getListeners() {
+        return listeners;
     }
 
     @Override
@@ -48,15 +55,26 @@ public abstract class TreeNode<K, T extends TreeNode> extends BaseNode<K, T> {
     }
 
     protected T putChild(K key, T value) {
-        return children.put(key, value);
+        T answer = children.put(key, value);
+        if (answer == null) {
+            getListeners().itemAdded(value);
+        } else {
+            getListeners().itemUpdated(value);
+        }
+        return answer;
     }
 
     protected void addChild(K key, T value) {
         children.put(key, value);
+        getListeners().itemAdded(value);
     }
 
     protected T removeChild(K key) {
-        return children.remove(key);
+        T answer = children.remove(key);
+        if (answer != null) {
+            getListeners().itemDeleted(answer);
+        }
+        return answer;
     }
 
     public List<T> getChildren() {

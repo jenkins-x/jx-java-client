@@ -30,9 +30,17 @@ import static io.jenkins.x.client.util.Strings.notEmpty;
 
 /**
  */
-public class PipelineTreeModel extends TreeNode<String,OwnerNode> implements Watcher<PipelineActivity> {
+public class PipelineTreeModel extends TreeNode<String, OwnerNode> implements Watcher<PipelineActivity> {
     private static final transient Logger LOG = LoggerFactory.getLogger(PipelineTreeModel.class);
     private PipelineClient pipelineClient;
+    private TreeModelListeners listeners = new TreeModelListeners();
+
+    public PipelineTreeModel(PipelineClient pipelineClient) {
+        super(new TreeModelListeners(), null, "Pipelines");
+        this.listeners = listeners;
+        this.pipelineClient = pipelineClient;
+        this.pipelineClient.addListener(this);
+    }
 
     public static PipelineTreeModel newInstance() {
         return newInstance(PipelineClient.newInstance());
@@ -44,14 +52,16 @@ public class PipelineTreeModel extends TreeNode<String,OwnerNode> implements Wat
         return model;
     }
 
-    public PipelineTreeModel(PipelineClient pipelineClient) {
-        super(null, "Pipelines");
-        this.pipelineClient = pipelineClient;
-        this.pipelineClient.addListener(this);
-    }
-
     public PipelineClient getPipelineClient() {
         return pipelineClient;
+    }
+
+    public void addListener(TreeModelListener listener) {
+        listeners.addListener(listener);
+    }
+
+    public void removeListener(TreeModelListener listener) {
+        listeners.removeListener(listener);
     }
 
     @Override
@@ -95,19 +105,17 @@ public class PipelineTreeModel extends TreeNode<String,OwnerNode> implements Wat
             branchName = "master";
         }
         if (empty(owner) || empty(repo) || empty(branchName)) {
-             LOG.info("Missing data for PipelineActivity " + name + " owner: " + owner + " repo: " + repo + " branchName: " + branchName);
-             return;
+            LOG.info("Missing data for PipelineActivity " + name + " owner: " + owner + " repo: " + repo + " branchName: " + branchName);
+            return;
         }
 
         if (action.equals(Watcher.Action.DELETED)) {
             OwnerNode child = getChild(owner);
             if (child != null) {
                 child.deletePipeline(owner, repo, branchName, build, activity);
-                if (child.isEmpty()) {
-                   removeChild(owner);
-                }
+                removeChild(owner);
             }
-        } else if (action.equals(Watcher.Action.ADDED) || action.equals(Watcher.Action.MODIFIED)){
+        } else if (action.equals(Watcher.Action.ADDED) || action.equals(Watcher.Action.MODIFIED)) {
             OwnerNode child = getChild(owner);
             if (child == null) {
                 child = new OwnerNode(this, owner);

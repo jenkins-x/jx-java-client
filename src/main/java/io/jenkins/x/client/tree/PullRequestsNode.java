@@ -26,7 +26,7 @@ import static io.jenkins.x.client.util.Strings.notEmpty;
 public class PullRequestsNode extends TreeNode<String, BranchNode> {
 
     public PullRequestsNode(RepoNode repoNode, String label) {
-        super(repoNode, label);
+        super(repoNode.getListeners(), repoNode, label);
     }
 
     public void deletePipeline(String branchName, String build, PipelineActivity activity) {

@@ -8,9 +8,9 @@ public class KubernetesNames {
     /**
      * Lets convert the string to btw a valid kubernetes resource name
      *
-     * @return the converted name
-     * @param text the text to convert
+     * @param text      the text to convert
      * @param allowDots whether or not to allow dots in the name
+     * @return the converted name
      */
     public static String convertToKubernetesName(String text, boolean allowDots) {
         String lower = text.toLowerCase();

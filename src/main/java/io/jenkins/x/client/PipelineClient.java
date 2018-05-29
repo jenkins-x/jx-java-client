@@ -16,7 +16,6 @@
  */
 package io.jenkins.x.client;
 
-import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientException;
@@ -51,7 +50,7 @@ public class PipelineClient implements Closeable {
     private final NonNamespaceOperation<PipelineActivity, PipelineActivityList, DoneablePipelineActivities, Resource<PipelineActivity, DoneablePipelineActivities>> pipelines;
     private List<Watcher<PipelineActivity>> listeners = new ArrayList<>();
     private Watch watcher;
-    private Map<PipelineKey,PipelineActivity> map = new TreeMap<>();
+    private Map<PipelineKey, PipelineActivity> map = new TreeMap<>();
 
     public PipelineClient(NonNamespaceOperation<PipelineActivity, PipelineActivityList, DoneablePipelineActivities, Resource<PipelineActivity, DoneablePipelineActivities>> pipelines) {
         this.pipelines = pipelines;
@@ -90,6 +89,23 @@ public class PipelineClient implements Closeable {
 
     public void removeListener(@NotNull Watcher<PipelineActivity> listener) {
         this.listeners.remove(listener);
+    }
+
+    /**
+     * Starts listening in a background thread to avoid blocking the calling thread
+     */
+    public void startAsync() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    start();
+                } catch (Exception e) {
+                    LOG.error("Failed to connect to kubernetes: " + e, e);
+                }
+            }
+        }, "Jenkins X PipelineClient Thread");
+        thread.start();
     }
 
     /**
@@ -136,9 +152,9 @@ public class PipelineClient implements Closeable {
         synchronized (map) {
             if (action.equals(Watcher.Action.DELETED)) {
                 map.remove(key);
-            } else if (action.equals(Watcher.Action.ADDED) || action.equals(Watcher.Action.MODIFIED)){
+            } else if (action.equals(Watcher.Action.ADDED) || action.equals(Watcher.Action.MODIFIED)) {
                 PipelineActivity old = map.get(key);
-                if (old == null || isNewer(pipelineActivity, old)) { 
+                if (old == null || isNewer(pipelineActivity, old)) {
                     map.put(key, pipelineActivity);
                 } else {
                     // don't fire any more events as this is an old value
@@ -151,7 +167,6 @@ public class PipelineClient implements Closeable {
             listener.eventReceived(action, pipelineActivity);
         }
     }
-
 
 
     protected void doClose() {

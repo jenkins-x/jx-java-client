@@ -33,17 +33,17 @@ public class URLHelpers {
                 continue;
             }
             if (buffer.length() > 0) {
-              boolean bufferEndsWithSeparator = buffer.toString().endsWith("/");
-              boolean stringStartsWithSeparator = string.startsWith("/");
-              if (bufferEndsWithSeparator) {
-                if (stringStartsWithSeparator) {
-                  string = string.substring(1);
+                boolean bufferEndsWithSeparator = buffer.toString().endsWith("/");
+                boolean stringStartsWithSeparator = string.startsWith("/");
+                if (bufferEndsWithSeparator) {
+                    if (stringStartsWithSeparator) {
+                        string = string.substring(1);
+                    }
+                } else {
+                    if (!stringStartsWithSeparator) {
+                        buffer.append("/");
+                    }
                 }
-              } else {
-                if (!stringStartsWithSeparator) {
-                  buffer.append("/");
-                }
-              }
             }
             buffer.append(string);
         }

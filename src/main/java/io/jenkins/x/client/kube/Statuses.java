@@ -32,8 +32,8 @@ public class Statuses {
     /**
      * Returns true if the pipeline has completed running
      *
-     * @return whether its completed or not
      * @param status the status string
+     * @return whether its completed or not
      */
     public static boolean isCompleted(String status) {
         switch (status) {

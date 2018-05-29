@@ -29,7 +29,7 @@ import static io.jenkins.x.client.util.Icons.lightDarkIcon;
  */
 public class BranchNode extends TreeNode<Integer, BuildNode> {
     public BranchNode(TreeItem parent, String branchName) {
-        super(parent, branchName);
+        super(parent.getListeners(), parent, branchName);
     }
 
     @Override
