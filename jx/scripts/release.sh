@@ -7,6 +7,9 @@ git checkout master
 # until we switch to the new kubernetes / jenkins credential implementation use git credentials store
 git config credential.helper store
 
+# display the current namespace
+jx ns -b
+
 #jx step git credentials
 jx step gpg credentials
 
