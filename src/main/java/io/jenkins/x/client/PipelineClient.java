@@ -48,12 +48,14 @@ public class PipelineClient implements Closeable {
     private static final transient Logger LOG = LoggerFactory.getLogger(PipelineClient.class);
 
     private final NonNamespaceOperation<PipelineActivity, PipelineActivityList, DoneablePipelineActivities, Resource<PipelineActivity, DoneablePipelineActivities>> pipelines;
+    private final String namespace;
     private List<Watcher<PipelineActivity>> listeners = new ArrayList<>();
     private Watch watcher;
     private Map<PipelineKey, PipelineActivity> map = new TreeMap<>();
 
-    public PipelineClient(NonNamespaceOperation<PipelineActivity, PipelineActivityList, DoneablePipelineActivities, Resource<PipelineActivity, DoneablePipelineActivities>> pipelines) {
+    public PipelineClient(NonNamespaceOperation<PipelineActivity, PipelineActivityList, DoneablePipelineActivities, Resource<PipelineActivity, DoneablePipelineActivities>> pipelines, String namespace) {
         this.pipelines = pipelines;
+        this.namespace = namespace;
     }
 
     public static PipelineClient newInstance() {
@@ -64,7 +66,11 @@ public class PipelineClient implements Closeable {
     }
 
     public static PipelineClient newInstance(@NotNull KubernetesClient client, @NotNull String ns) {
-        return new PipelineClient(ClientHelper.pipelineActivityClient(client, ns));
+        return new PipelineClient(ClientHelper.pipelineActivityClient(client, ns), ns);
+    }
+
+    public String getNamespace() {
+        return namespace;
     }
 
     @Override
@@ -175,4 +181,5 @@ public class PipelineClient implements Closeable {
             this.watcher = null;
         }
     }
+
 }

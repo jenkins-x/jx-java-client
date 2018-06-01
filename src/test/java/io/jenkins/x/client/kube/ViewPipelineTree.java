@@ -16,6 +16,7 @@
  */
 package io.jenkins.x.client.kube;
 
+import io.jenkins.x.client.PipelineClient;
 import io.jenkins.x.client.tree.PipelineTreeModel;
 import io.jenkins.x.client.tree.TreeItem;
 
@@ -25,11 +26,15 @@ import java.util.List;
  */
 public class ViewPipelineTree {
     public static void main(String[] args) throws Exception {
-        PipelineTreeModel model = PipelineTreeModel.newInstance();
+        PipelineClient pipelineClient = PipelineClient.newInstance();
+
+        System.out.println("Looking in namespace: " + pipelineClient.getNamespace());
+        PipelineTreeModel model = PipelineTreeModel.newStaticInstance();
 
         viewTree(model, "");
 
-        model.getPipelineClient().close();
+        System.out.println("Done");
+        pipelineClient.close();
     }
 
     public static void viewTree(TreeItem node, String indent) {
