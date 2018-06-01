@@ -20,6 +20,14 @@ package io.jenkins.x.client.util;
  */
 public class Strings {
 
+    public static String getOrBlank(String value) {
+        return getOrDefault(value, "");
+    }
+
+    public static String getOrDefault(String value, String defaultValue) {
+        return value != null ? value : defaultValue;
+    }
+
     /**
      * Returns true if the string is not null and not empty
      */
@@ -35,4 +43,13 @@ public class Strings {
         return text == null || text.isEmpty();
     }
 
+    /**
+     * Capitalise the given text
+     */
+    public static String capitalise(String text) {
+        if (empty(text)) {
+            return "";
+        }
+        return text.substring(0, 1).toUpperCase() + text.substring(1);
+    }
 }

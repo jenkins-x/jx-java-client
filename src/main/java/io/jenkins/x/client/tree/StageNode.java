@@ -16,10 +16,85 @@
  */
 package io.jenkins.x.client.tree;
 
+import io.jenkins.x.client.kube.CoreActivityStep;
+import io.jenkins.x.client.kube.GitStatus;
+import io.jenkins.x.client.kube.PreviewActivityStep;
+import io.jenkins.x.client.kube.PromoteActivityStep;
+import io.jenkins.x.client.kube.PromotePullRequestStep;
+import io.jenkins.x.client.kube.PromoteUpdateStep;
+
+import java.util.List;
+
+import static io.jenkins.x.client.util.Strings.getOrBlank;
+import static io.jenkins.x.client.util.Strings.notEmpty;
+
 /**
  */
 public class StageNode extends TreeNode<String, StageNode> {
-    public StageNode(TreeItem parent, String label) {
+    private final CoreActivityStep step;
+
+    public StageNode(TreeItem parent, String label, CoreActivityStep step) {
         super(parent.getListeners(), parent, label);
+        this.step = step;
+    }
+
+    public String getPullRequestURL() {
+        if (step instanceof PreviewActivityStep) {
+            PreviewActivityStep previewActivityStep = (PreviewActivityStep) step;
+            return previewActivityStep.getPullRequestURL();
+        } else if (step instanceof PromoteActivityStep) {
+            PromoteActivityStep promoteActivityStep = (PromoteActivityStep) step;
+            PromotePullRequestStep pullRequest = promoteActivityStep.getPullRequest();
+            if (pullRequest != null) {
+                return pullRequest.getPullRequestURL();
+            }
+        } else if (step instanceof PromotePullRequestStep) {
+            PromotePullRequestStep pullRequestStep = (PromotePullRequestStep) step;
+            return pullRequestStep.getPullRequestURL();
+        }
+        return null;
+    }
+
+    public String getApplicationURL() {
+        if (step instanceof PreviewActivityStep) {
+            PreviewActivityStep previewActivityStep = (PreviewActivityStep) step;
+            return previewActivityStep.getApplicationURL();
+        } else if (step instanceof PromoteActivityStep) {
+            PromoteActivityStep promoteActivityStep = (PromoteActivityStep) step;
+            return promoteActivityStep.getApplicationURL();
+        }
+        return null;
+    }
+
+    public String getUpdatePipelineURL() {
+        if (step instanceof PromoteUpdateStep) {
+            PromoteUpdateStep promoteUpdateStep = (PromoteUpdateStep) step;
+            List<GitStatus> statuses = promoteUpdateStep.getStatuses();
+            if (statuses != null) {
+                for (GitStatus status : statuses) {
+                    String url = status.getUrl();
+                    if (notEmpty(url)) {
+                        return url;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public String getDescription() {
+        return step.getDescription();
+    }
+
+    public String getStatus() {
+        return getOrBlank(step.getStatus());
+    }
+
+    public String getStartedTimestamp() {
+        return step.getStartedTimestamp();
+    }
+
+    public String getCompletedTimestamp() {
+        return step.getCompletedTimestamp();
     }
 }

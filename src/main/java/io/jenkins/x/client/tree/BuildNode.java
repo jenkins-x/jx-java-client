@@ -19,15 +19,25 @@ package io.jenkins.x.client.tree;
 import io.jenkins.x.client.kube.PipelineActivity;
 import io.jenkins.x.client.kube.PipelineActivitySpec;
 import io.jenkins.x.client.kube.PipelineActivityStep;
+import io.jenkins.x.client.kube.PreviewActivityStep;
+import io.jenkins.x.client.kube.PromoteActivityStep;
+import io.jenkins.x.client.kube.PromotePullRequestStep;
+import io.jenkins.x.client.kube.PromoteUpdateStep;
+import io.jenkins.x.client.kube.StageActivityStep;
+import io.jenkins.x.client.util.Strings;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
+import static io.jenkins.x.client.util.Strings.getOrBlank;
+import static io.jenkins.x.client.util.Strings.notEmpty;
 import static io.jenkins.x.client.util.Times.elapsedTime;
 
 /**
  */
-public class BuildNode extends TreeNode<String, StageNode> {
+public class BuildNode extends TreeNode<Integer, StageNode> {
     private PipelineActivity pipeline;
 
     public BuildNode(BranchNode branchNode, String build) {
@@ -65,7 +75,54 @@ public class BuildNode extends TreeNode<String, StageNode> {
 
     public void setPipeline(PipelineActivity pipeline) {
         this.pipeline = pipeline;
+        List<PipelineActivityStep> steps = getSteps();
+        Map<Integer, StageNode> children = new TreeMap<>();
+
+        for (PipelineActivityStep step : steps) {
+            addSteps(children, step);
+        }
+        setChildren(children);
+
         getListeners().itemUpdated(this);
+    }
+
+    protected void addSteps(Map<Integer, StageNode> children, PipelineActivityStep step) {
+        StageActivityStep stage = step.getStage();
+        PromoteActivityStep promote = step.getPromote();
+        PreviewActivityStep preview = step.getPreview();
+        if (stage != null) {
+            children.put(children.size(), new StageNode(this, stage.getName(), stage));
+        }
+        if (preview != null) {
+            children.put(children.size(), new StageNode(this, "Preview", preview));
+        }
+        if (promote != null) {
+            String name = "Promote";
+            String envName = Strings.capitalise(promote.getEnvironment());
+            if (notEmpty(envName)) {
+                name = "Promote to " + envName;
+            }
+            children.put(children.size(), new StageNode(this, name, promote));
+
+
+            PromotePullRequestStep pullRequest = promote.getPullRequest();
+            if (pullRequest != null) {
+                String prName = name + " Pull Request";
+                String prUrl = pullRequest.getPullRequestURL();
+                if (notEmpty(prUrl)) {
+                    int idx = prUrl.lastIndexOf("/");
+                    if (idx > 0) {
+                        prName += " #" + prUrl.substring(idx + 1);
+                    }
+                }
+                children.put(children.size(), new StageNode(this, prName, pullRequest));
+            }
+            PromoteUpdateStep update = promote.getUpdate();
+            if (update != null) {
+                String updateName = name + " Update";
+                children.put(children.size(), new StageNode(this, updateName, update));
+            }
+        }
     }
 
     public PipelineActivitySpec getSpec() {
@@ -110,11 +167,7 @@ public class BuildNode extends TreeNode<String, StageNode> {
     }
 
     public String getStatus() {
-        String status = getSpec().getStatus();
-        if (status == null) {
-            return "";
-        }
-        return status;
+        return getOrBlank(getSpec().getStatus());
     }
 
     public String getStartedTimestamp() {

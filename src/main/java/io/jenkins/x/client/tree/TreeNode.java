@@ -77,6 +77,11 @@ public abstract class TreeNode<K, T extends TreeNode> extends BaseNode<K, T> {
         return answer;
     }
 
+    protected void setChildren(Map<K, T> children) {
+        this.children.clear();
+        this.children.putAll(children);
+    }
+
     public List<T> getChildren() {
         return new ArrayList<T>(children.values());
     }

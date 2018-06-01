@@ -44,6 +44,16 @@ public class PipelineTreeModel extends TreeNode<String, OwnerNode> implements Wa
         return newInstance(PipelineClient.newInstance());
     }
 
+    public static PipelineTreeModel newStaticInstance() {
+        return newStaticInstance(PipelineClient.newInstance());
+    }
+
+    public static PipelineTreeModel newStaticInstance(PipelineClient pipelineClient) {
+        PipelineTreeModel model = new PipelineTreeModel(pipelineClient);
+        pipelineClient.start();
+        return model;
+    }
+
     public static PipelineTreeModel newInstance(PipelineClient pipelineClient) {
         PipelineTreeModel model = new PipelineTreeModel(pipelineClient);
         pipelineClient.startAsync();
