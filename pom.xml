@@ -10,7 +10,7 @@
 
   <groupId>io.jenkins-x.client</groupId>
   <artifactId>jx-java-client</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>jx-java-client</name>
 
   <url>https://jenkins-x.io/</url>
