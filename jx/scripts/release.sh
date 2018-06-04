@@ -26,5 +26,7 @@ mvn -V -B -e -U install org.sonatype.plugins:nexus-staging-maven-plugin:1.6.7:de
 jx step nexus release
 jx step tag --version ${VERSION}
 
-#updatebot push-version --kind maven UPDATEBOT_VERSION ${VERSION}
-#updatebot update
+jx waitfor artifact -g io.jenkins-x.client -a jx-java-client -v ${VERSION}
+
+updatebot push-version --kind maven io.jenkins-x.client:jx-java-client ${VERSION}
+updatebot update
