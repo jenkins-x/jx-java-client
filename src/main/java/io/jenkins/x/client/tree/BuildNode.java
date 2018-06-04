@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static io.jenkins.x.client.Pipelines.getPullRequestName;
 import static io.jenkins.x.client.util.Strings.getOrBlank;
 import static io.jenkins.x.client.util.Strings.notEmpty;
 import static io.jenkins.x.client.util.Times.elapsedTime;
@@ -107,14 +108,7 @@ public class BuildNode extends TreeNode<Integer, StageNode> {
 
             PromotePullRequestStep pullRequest = promote.getPullRequest();
             if (pullRequest != null) {
-                String prName = name + " Pull Request";
-                String prUrl = pullRequest.getPullRequestURL();
-                if (notEmpty(prUrl)) {
-                    int idx = prUrl.lastIndexOf("/");
-                    if (idx > 0) {
-                        prName += " #" + prUrl.substring(idx + 1);
-                    }
-                }
+                String prName = name + " Pull Request" + getPullRequestName(pullRequest.getPullRequestURL());
                 children.put(children.size(), new StageNode(this, prName, pullRequest));
             }
             PromoteUpdateStep update = promote.getUpdate();

@@ -16,6 +16,7 @@
  */
 package io.jenkins.x.client.tree;
 
+import io.jenkins.x.client.Pipelines;
 import io.jenkins.x.client.kube.CoreActivityStep;
 import io.jenkins.x.client.kube.GitStatus;
 import io.jenkins.x.client.kube.PreviewActivityStep;
@@ -25,8 +26,10 @@ import io.jenkins.x.client.kube.PromoteUpdateStep;
 
 import java.util.List;
 
+import static io.jenkins.x.client.Pipelines.getPullRequestName;
 import static io.jenkins.x.client.util.Strings.getOrBlank;
 import static io.jenkins.x.client.util.Strings.notEmpty;
+import static io.jenkins.x.client.util.Times.elapsedTime;
 
 /**
  */
@@ -36,6 +39,30 @@ public class StageNode extends TreeNode<String, StageNode> {
     public StageNode(TreeItem parent, String label, CoreActivityStep step) {
         super(parent.getListeners(), parent, label);
         this.step = step;
+    }
+
+    @Override
+    public String getIconPath() {
+        switch (getStatus()) {
+            case "Succeeded":
+                return "atomist_build_passed.png";
+            case "Failed":
+            case "Error":
+                return "atomist_build_failed.png";
+            case "Running":
+                return "spinner.gif";
+            case "Aborted":
+                return "circle-64.png";
+            case "NotExecuted":
+                // TODO
+                return "";
+        }
+        return "";
+    }
+
+    @Override
+    public String getTooltip() {
+        return getLabel() + ": " + getStatus() + elapsedTime(" Duration: ", getStartedTimestamp(), getCompletedTimestamp());
     }
 
     public String getPullRequestURL() {
@@ -53,6 +80,10 @@ public class StageNode extends TreeNode<String, StageNode> {
             return pullRequestStep.getPullRequestURL();
         }
         return null;
+    }
+
+    public String getPullRequestName() {
+        return Pipelines.getPullRequestName(getPullRequestURL());
     }
 
     public String getApplicationURL() {
@@ -96,5 +127,9 @@ public class StageNode extends TreeNode<String, StageNode> {
 
     public String getCompletedTimestamp() {
         return step.getCompletedTimestamp();
+    }
+
+    public CoreActivityStep getStep() {
+        return step;
     }
 }

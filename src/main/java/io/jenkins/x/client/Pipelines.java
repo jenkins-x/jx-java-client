@@ -35,4 +35,17 @@ public class Pipelines {
         }
         return null;
     }
+
+    /**
+     * Returns the Pull Request name from the given URL prefixed with space or an empty string if there is no URL
+     */
+    public static String getPullRequestName(String prUrl) {
+        if (notEmpty(prUrl)) {
+            int idx = prUrl.lastIndexOf("/");
+            if (idx > 0) {
+                return " #" + prUrl.substring(idx + 1);
+            }
+        }
+        return "";
+    }
 }
