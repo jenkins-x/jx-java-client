@@ -1,7 +1,4 @@
 pipeline {
-  environment {
-    GH_CREDS = credentials('jenkins-x-github')
-  }
   agent {
     label "jenkins-maven"
   }
@@ -25,6 +22,7 @@ pipeline {
       steps {
         checkout scm
         container('maven') {
+          sh "jx step git credentials"
           sh './jx/scripts/release.sh'
         }
       }
